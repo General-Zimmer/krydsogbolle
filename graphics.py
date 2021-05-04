@@ -73,7 +73,7 @@ class gui(Frame):
         elif self.logi.GetTurn() == 0:
             bChanges("bolle")
         else:
-            print("Something broke")
+            print("Something broke N' yeeted")
 
     def turncolor(self):
         if self.logi.GetTurn() == 0:
