@@ -5,7 +5,7 @@ class data:
         self.boller = []
         self.krydser = []
 
-    def Setscore(self, player, num, button):
+    def Setscore(self, player: str, num: int, button):
         result = None
         if player == "bolle":
             if button is not None:
@@ -33,9 +33,6 @@ class data:
 
     def addpos(self, content):
         self.pos.append(content)
-
-    def setTurn(self, turn):
-        self.turn = turn
 
     def getTurn(self):
         return self.turn[0]

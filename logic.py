@@ -45,5 +45,5 @@ class logi:
     def GetTurn(self):
         return self.data.turn[0]
 
-    def SetScore(self, player, num, button=None):
+    def SetScore(self, player: str, num: int, button=None):
         return self.data.Setscore(player, num, button)
