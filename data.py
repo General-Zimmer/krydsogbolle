@@ -1,7 +1,7 @@
 class data:
     def __init__(self):
         self.pos = []
-        self.turn = [0]
+        self.turn = [1]
         self.boller = []
         self.krydser = []
 

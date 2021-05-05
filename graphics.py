@@ -22,10 +22,8 @@ class gui(Frame):
 
     def ButtonPress(self, x, y):
 
-        if x == 0:
-            num = y
-        else:
-            num = x * self.size + y
+
+        num = x * self.size + y
         button = self.logi.data.pos[num]
 
         def bChanges(player: str):
