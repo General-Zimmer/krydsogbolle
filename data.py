@@ -34,6 +34,9 @@ class data:
     def addpos(self, content):
         self.pos.append(content)
 
+    def getPos(self):
+        return self.pos
+
     def getTurn(self):
         return self.turn[0]
 

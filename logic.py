@@ -33,6 +33,9 @@ class logi:
     def StorePos(self, content):
         self.data.addpos(content)
 
+    def getPos(self):
+        return self.data.getPos()
+
     def getBolle(self):
         return self.data.getBolle()
 

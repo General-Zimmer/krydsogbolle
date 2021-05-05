@@ -22,9 +22,8 @@ class gui(Frame):
 
     def ButtonPress(self, x, y):
 
-
         num = x * self.size + y
-        button = self.logi.data.pos[num]
+        button = self.logi.getPos()[num]
 
         def bChanges(player: str):
             if player == "kryds" and self.logi.getBolle().count(num) != 0:
@@ -38,16 +37,16 @@ class gui(Frame):
                 if player == "bolle" and self.logi.getBolle().count(num) != 0:
                     return
                 self.logi.SetScore(player, num, self.switch)
-                self.logi.data.pos[self.switch]["background"] = self.defaultcolor
+                self.logi.getPos()[self.switch]["background"] = self.defaultcolor
                 self.switch = None
                 for b in range(9):
-                    but = self.logi.data.pos[b]
+                    but = self.logi.getPos()[b]
                     if but["background"] == self.switchcolor:
                         but["background"] = self.defaultcolor
 
             if self.logi.getKryds().count(num) != 0 or self.logi.getBolle().count(num) != 0:
                 for b in range(9):
-                    but = self.logi.data.pos[b]
+                    but = self.logi.getPos()[b]
                     if but["background"] == self.defaultcolor:
                         self.switch = num
                         but["background"] = self.switchcolor
@@ -60,7 +59,7 @@ class gui(Frame):
             self.turncolor()
             score = self.logi.SetScore(player, num)
             if score is not None:
-                lastB = self.logi.data.pos[score]
+                lastB = self.logi.getPos()[score]
                 lastB.configure(bg=self.defaultcolor)
 
             if self.logi.CheckWin(player) is not None:
