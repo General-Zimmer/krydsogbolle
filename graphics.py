@@ -20,12 +20,12 @@ class gui(Frame):
         self.bLabel = Button(self, text="Bolle", bg=self.bColor)
         self.bLabel.grid(row=1, column=self.size + 1, sticky=W + S + N + E)
 
-    def ButtonPress(self, x, y):
+    def __ButtonPress__(self, x, y):
 
         num = x * self.size + y
         button = self.logi.getPos()[num]
 
-        def bChanges(player: str):
+        def __bChanges__(player: str):
             if player == "kryds" and self.logi.getBolle().count(num) != 0:
                 return
             if player == "bolle" and self.logi.getKryds().count(num) != 0:
@@ -56,7 +56,7 @@ class gui(Frame):
                 button.configure(bg=self.kColor)
             elif player == "bolle":
                 button.configure(bg=self.bColor)
-            self.turncolor()
+            self.__turncolor__()
             score = self.logi.SetScore(player, num)
             if score is not None:
                 lastB = self.logi.getPos()[score]
@@ -66,13 +66,13 @@ class gui(Frame):
                 pass
 
         if self.logi.GetTurn() == 1:
-            bChanges("kryds")
+            __bChanges__("kryds")
         elif self.logi.GetTurn() == 0:
-            bChanges("bolle")
+            __bChanges__("bolle")
         else:
             print("Something broke N' yeeted")
 
-    def turncolor(self):
+    def __turncolor__(self):
         if self.logi.GetTurn() == 0:
             self.kLabel.configure(bg=self.kColor)
             self.bLabel.configure(bg=self.defaultcolor)
@@ -81,14 +81,14 @@ class gui(Frame):
             self.kLabel.configure(bg=self.defaultcolor)
         self.logi.NextTurn()
 
-    def buttons(self, size):
+    def __buttons__(self, size):
         for x in range(size):
             for y in range(size):
-                btn = Button(self, bg=self.defaultcolor, command=partial(self.ButtonPress, x, y))
+                btn = Button(self, bg=self.defaultcolor, command=partial(self.__ButtonPress__, x, y))
                 btn.grid(column=x, row=y, sticky=N + S + E + W)
                 btn.config(width=6, height=2)
                 self.logi.StorePos(btn)
 
     def start(self):
-        self.buttons(self.size)
-        self.turncolor()
+        self.__buttons__(self.size)
+        self.__turncolor__()
