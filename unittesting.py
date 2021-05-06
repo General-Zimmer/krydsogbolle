@@ -1,7 +1,8 @@
 import unittest
+from tkinter import *
 import logic as logic
 import data as data
-
+import graphics as gfx
 
 class DataTests(unittest.TestCase):
     def setUp(self):
@@ -16,13 +17,13 @@ class DataTests(unittest.TestCase):
 
 class LogiTests(unittest.TestCase):
     def setUp(self):
-        self.logi = logic.logi()
+        root = Tk()
+        self.gfx = gfx.gui(root)
 
 
     def test_checkwin1(self):
-        for x in range(18):
-            self.logi.StorePos(x)
-        self.logi.CheckWin("player")
+        self.gfx.logi.SetScore("player", )
+        self.gfx.logi.CheckWin("player")
 
     def tearDown(self):
         pass

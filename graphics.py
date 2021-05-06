@@ -120,3 +120,6 @@ class gui(Frame):
         self.root.columnconfigure(self.size+1, weight=1)
         self.__buttons__(self.size)
         self.__turncolor__()
+
+    def test(self):
+        self.root.destroy()
