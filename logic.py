@@ -7,28 +7,41 @@ class logi:
 
     def CheckWin(self, player: str):
         score = None
+
+        # Get sorted list of the data to be checked
         if player == "kryds":
             score = sorted(self.data.getKryds())
         elif player == "bolle":
             score = sorted(self.data.getBolle())
 
+        # You can't win if you don't have 3 scores
         if len(score) != 3:
             return None
 
+        # First check the middle score for vertical victories
         if score[1] == 1 or 4 or 7:
+            # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 1) and score[1] == (score[2] - 1):
                 print(player + " vandt")
                 return player
+        # Then check the middle score for horrizontel victories
         if score[1] == 3 or 4 or 5:
+            # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 3) and score[1] == (score[2] - 3):
                 print(player + " vandt")
                 return player
+        # Last check the middle score for diagonal victories
         if score[1] == 4:
+            # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 4) and score[1] == (score[2] - 4) or score[1] == (score[0] + 2) and score[1] == (
                     score[2] - 2):
                 print(player + " vandt")
                 return player
         return None
+
+    # Do you need comments to getter and setter functions?
+    def SetScore(self, player: str, num: int, button=None):
+        return self.data.Setscore(player, num, button)
 
     def StorePos(self, content):
         self.data.addpos(content)
@@ -48,5 +61,4 @@ class logi:
     def GetTurn(self):
         return self.data.turn[0]
 
-    def SetScore(self, player: str, num: int, button=None):
-        return self.data.Setscore(player, num, button)
+

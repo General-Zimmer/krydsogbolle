@@ -24,17 +24,20 @@ class gui(Frame):
         self.start()
 
     def __ButtonPress__(self, x, y):
-
+        # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
 
         def __bChanges__(player: str):
+            # prevents changes to the opponents score
             if player == "kryds" and self.logi.getBolle().count(num) != 0:
                 return
             if player == "bolle" and self.logi.getKryds().count(num) != 0:
                 return
 
+            # Move your score
             if self.switch is not None:
+                # Prevents replacing your already placed scores
                 if player == "kryds" and self.logi.getKryds().count(num) != 0:
                     return
                 if player == "bolle" and self.logi.getBolle().count(num) != 0:
@@ -47,6 +50,7 @@ class gui(Frame):
                     if but["background"] == self.switchcolor:
                         but["background"] = self.defaultcolor
 
+            # Mark your own score for moving
             if self.logi.getKryds().count(num) != 0 or self.logi.getBolle().count(num) != 0:
                 for b in range(9):
                     but = self.logi.getPos()[b]
@@ -55,19 +59,26 @@ class gui(Frame):
                         but["background"] = self.switchcolor
                 return True
 
+            # Change button to corresponding color
             if player == "kryds":
                 button.configure(bg=self.kColor)
             elif player == "bolle":
                 button.configure(bg=self.bColor)
             self.__turncolor__()
+
+            # Change score list and remove color from button that isn't score anymore (The oldest score is replaced if
+            # there's more than 3 scores for a player)
             score = self.logi.SetScore(player, num)
             if score is not None:
                 lastB = self.logi.getPos()[score]
                 lastB.configure(bg=self.defaultcolor)
 
-            if self.logi.CheckWin(player) is not None:
+            # Check if someone won
+            whoWon = self.logi.CheckWin(player)
+            if whoWon is not None:
                 pass
 
+        # check whose turn it is.
         if self.logi.GetTurn() == 1:
             __bChanges__("kryds")
         elif self.logi.GetTurn() == 0:
@@ -76,22 +87,29 @@ class gui(Frame):
             print("Something broke N' yeeted")
 
     def __turncolor__(self):
+        # Switch the color of the side labels
         if self.logi.GetTurn() == 0:
             self.kLabel.configure(bg=self.kColor)
             self.bLabel.configure(bg=self.defaultcolor)
-        else:
+        elif self.logi.GetTurn() == 1:
             self.bLabel.configure(bg=self.bColor)
             self.kLabel.configure(bg=self.defaultcolor)
+        else:
+            print("turncolor broke")
+        # Switches a number indicating if whose turn it is
         self.logi.NextTurn()
 
+    # Buttons gets created with a x and y variable attached to its click function
     def __buttons__(self, size):
         for x in range(size):
             for y in range(size):
                 btn = Button(self.root, bg=self.defaultcolor, command=partial(self.__ButtonPress__, x, y))
                 btn.grid(column=x, row=y, sticky="NSEW")
                 btn.config(width=6, height=2)
+                # Button is appended in a list
                 self.logi.StorePos(btn)
 
+    # Function to start all necessary functions
     def start(self):
         for x in range(self.size):
             self.root.columnconfigure(x, weight=2)

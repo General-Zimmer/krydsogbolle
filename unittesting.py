@@ -5,7 +5,7 @@ import data as data
 
 class DataTests(unittest.TestCase):
     def setUp(self):
-        self.data = data.data
+        self.data = data.data()
 
     def test_setscore(self):
         self.assertIsNone(self.data.Setscore())
@@ -16,10 +16,13 @@ class DataTests(unittest.TestCase):
 
 class LogiTests(unittest.TestCase):
     def setUp(self):
-        self.logi = logic.logi
+        self.logi = logic.logi()
 
-    def test_checkwin(self):
-        self.logi.CheckWin()
+
+    def test_checkwin1(self):
+        for x in range(18):
+            self.logi.StorePos(x)
+        self.logi.CheckWin("player")
 
     def tearDown(self):
         pass
