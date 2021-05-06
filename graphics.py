@@ -35,16 +35,18 @@ class gui(Frame):
             if player == "bolle" and self.logi.getKryds().count(num) != 0:
                 return
 
-            # Move your score
+            # Move your score if it has been marked
             if self.switch is not None:
                 # Prevents replacing your already placed scores
                 if player == "kryds" and self.logi.getKryds().count(num) != 0:
                     return
                 if player == "bolle" and self.logi.getBolle().count(num) != 0:
                     return
+                # Add score to list and remove color from the removed score
                 self.logi.SetScore(player, num, self.switch)
                 self.logi.getPos()[self.switch]["background"] = self.defaultcolor
                 self.switch = None
+                # hide valid move spots
                 for b in range(9):
                     but = self.logi.getPos()[b]
                     if but["background"] == self.switchcolor:
@@ -52,6 +54,7 @@ class gui(Frame):
 
             # Mark your own score for moving
             if self.logi.getKryds().count(num) != 0 or self.logi.getBolle().count(num) != 0:
+                # Show valid move spots
                 for b in range(9):
                     but = self.logi.getPos()[b]
                     if but["background"] == self.defaultcolor:
