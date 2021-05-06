@@ -6,8 +6,10 @@ from functools import partial
 class gui(Frame):
     def __init__(self, root):
         self.logi = logik.logi()
+        self.root = root
+        root.geometry("400x200")
         Frame.__init__(self, root)
-        self.grid(sticky=W + S + N + E)
+        self.grid(sticky="NSEW")
         self.goal = 3
         self.size = 3
         self.kColor = "cyan"
@@ -15,10 +17,11 @@ class gui(Frame):
         self.defaultcolor = "white"
         self.switchcolor = "green"
         self.switch = None
-        self.kLabel = Button(self, text="Kryds", bg=self.kColor)
-        self.kLabel.grid(row=0, column=self.size + 1, sticky=W + S + N + E)
-        self.bLabel = Button(self, text="Bolle", bg=self.bColor)
-        self.bLabel.grid(row=1, column=self.size + 1, sticky=W + S + N + E)
+        self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
+        self.kLabel.grid(row=0, column=self.size + 1, sticky="NSEW")
+        self.bLabel = Button(self.root, text="Bolle", bg=self.bColor)
+        self.bLabel.grid(row=1, column=self.size + 1, sticky="NSEW")
+        self.start()
 
     def __ButtonPress__(self, x, y):
 
@@ -84,11 +87,15 @@ class gui(Frame):
     def __buttons__(self, size):
         for x in range(size):
             for y in range(size):
-                btn = Button(self, bg=self.defaultcolor, command=partial(self.__ButtonPress__, x, y))
-                btn.grid(column=x, row=y, sticky=N + S + E + W)
+                btn = Button(self.root, bg=self.defaultcolor, command=partial(self.__ButtonPress__, x, y))
+                btn.grid(column=x, row=y, sticky="NSEW")
                 btn.config(width=6, height=2)
                 self.logi.StorePos(btn)
 
     def start(self):
+        for x in range(self.size):
+            self.root.columnconfigure(x, weight=2)
+            self.root.rowconfigure(x, weight=2)
+        self.root.columnconfigure(self.size+1, weight=1)
         self.__buttons__(self.size)
         self.__turncolor__()
