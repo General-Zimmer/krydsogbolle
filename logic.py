@@ -17,27 +17,30 @@ class logi:
         # You can't win if you don't have 3 scores
         if len(score) != 3:
             return None
-
+        print(score)
+        middle = score[1]
+        print(middle)
         # First check the middle score for vertical victories
-        if score[1] == 1 or 4 or 7:
+        if middle == 1 or middle == 4 or middle == 7:
             # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 1) and score[1] == (score[2] - 1):
                 print(player + " vandt")
                 return player
         # Then check the middle score for horrizontel victories
-        if score[1] == 3 or 4 or 5:
+        elif middle == 3 or middle == 4 or middle == 5:
             # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 3) and score[1] == (score[2] - 3):
                 print(player + " vandt")
                 return player
         # Last check the middle score for diagonal victories
-        if score[1] == 4:
+        elif middle == 4:
             # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 4) and score[1] == (score[2] - 4) or score[1] == (score[0] + 2) and score[1] == (
                     score[2] - 2):
                 print(player + " vandt")
                 return player
-        return None
+        else:
+            return None
 
     # Do you need comments to getter and setter functions?
     def SetScore(self, player: str, num: int, button=None):
