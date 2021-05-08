@@ -27,7 +27,7 @@ class gui(Frame):
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
-
+        print(num)
         def __bChanges__(player: str):
             # prevents changes to the opponents score
             if player == "kryds" and self.logi.getBolle().count(num) != 0:
