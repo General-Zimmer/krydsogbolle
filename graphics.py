@@ -117,7 +117,7 @@ class gui(Frame):
         for x in range(self.size):
             self.root.columnconfigure(x, weight=2)
             self.root.rowconfigure(x, weight=2)
-        self.root.columnconfigure(self.size+1, weight=1)
+        self.root.columnconfigure(self.size + 1, weight=1)
         self.__buttons__(self.size)
         self.__turncolor__()
 

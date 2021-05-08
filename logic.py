@@ -19,7 +19,6 @@ class logi:
             return None
         print(score)
         middle = score[1]
-        print(middle)
         # First check the middle score for vertical victories
         if middle == 1 or middle == 4 or middle == 7:
             # Check if the first and last score is in the correct place
@@ -27,20 +26,20 @@ class logi:
                 print(player + " vandt")
                 return player
         # Then check the middle score for horrizontel victories
-        elif middle == 3 or middle == 4 or middle == 5:
+        if middle == 3 or middle == 4 or middle == 5:
             # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 3) and score[1] == (score[2] - 3):
                 print(player + " vandt")
                 return player
         # Last check the middle score for diagonal victories
-        elif middle == 4:
+        if middle == 4:
             # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 4) and score[1] == (score[2] - 4) or score[1] == (score[0] + 2) and score[1] == (
                     score[2] - 2):
                 print(player + " vandt")
                 return player
-        else:
-            return None
+
+        return None
 
     # Do you need comments to getter and setter functions?
     def SetScore(self, player: str, num: int, button=None):
