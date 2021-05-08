@@ -20,13 +20,13 @@ class logi:
         print(score)
         middle = score[1]
         # First check the middle score for vertical victories
-        if middle == 1 or middle == 4 or middle == 7:
+        if middle in [1, 4, 7]:
             # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 1) and score[1] == (score[2] - 1):
                 print(player + " vandt")
                 return player
         # Then check the middle score for horrizontel victories
-        if middle == 3 or middle == 4 or middle == 5:
+        if middle in [3, 4, 5]:
             # Check if the first and last score is in the correct place
             if score[1] == (score[0] + 3) and score[1] == (score[2] - 3):
                 print(player + " vandt")
