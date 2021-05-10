@@ -17,11 +17,14 @@ class gui(Frame):
         self.defaultcolor = "white"
         self.switchcolor = "green"
         self.switch = None
+        self.start()
+
+        # These buttons show whose turn it is
         self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
         self.kLabel.grid(row=0, column=self.size + 1, sticky="NSEW")
         self.bLabel = Button(self.root, text="Bolle", bg=self.bColor)
         self.bLabel.grid(row=1, column=self.size + 1, sticky="NSEW")
-        self.start()
+
 
     def __ButtonPress__(self, x, y):
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
