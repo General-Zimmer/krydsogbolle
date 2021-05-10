@@ -17,13 +17,14 @@ class gui(Frame):
         self.defaultcolor = "white"
         self.switchcolor = "green"
         self.switch = None
-        self.start()
 
         # These buttons show whose turn it is
         self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
         self.kLabel.grid(row=0, column=self.size + 1, sticky="NSEW")
         self.bLabel = Button(self.root, text="Bolle", bg=self.bColor)
         self.bLabel.grid(row=1, column=self.size + 1, sticky="NSEW")
+
+        self.start()
 
 
     def __ButtonPress__(self, x, y):
@@ -112,16 +113,18 @@ class gui(Frame):
                 btn = Button(self.root, bg=self.defaultcolor, command=partial(self.__ButtonPress__, x, y))
                 btn.grid(column=x, row=y, sticky="NSEW")
                 btn.config(width=6, height=2)
-                # Button is appended in a list
+                # Reference to button is appended in a list
                 self.logi.StorePos(btn)
 
-    # Function to start all necessary functions
+    # Function for setup things
     def start(self):
+        # Make rows stretchable
         for x in range(self.size):
             self.root.columnconfigure(x, weight=2)
             self.root.rowconfigure(x, weight=2)
         self.root.columnconfigure(self.size + 1, weight=1)
         self.__buttons__(self.size)
+        # Set the turn color
         self.__turncolor__()
 
     def test(self):
