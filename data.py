@@ -47,8 +47,6 @@ class data:
     def getTurn(self):
         return self.turn[0]
 
-    def getPos(self):
-        return self.pos
 
     def getBolle(self):
         return self.boller

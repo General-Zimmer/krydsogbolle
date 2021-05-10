@@ -26,12 +26,12 @@ class gui(Frame):
 
         self.start()
 
-
     def __ButtonPress__(self, x, y):
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
         print(num)
+
         def __bChanges__(player: str):
             # prevents changes to the opponents score
             if player == "kryds" and self.logi.getBolle().count(num) != 0:
@@ -66,14 +66,14 @@ class gui(Frame):
                         but["background"] = self.switchcolor
                 return True
 
-            # Change button to corresponding color
+            # Change button to corresponding color and flip the turn
             if player == "kryds":
                 button.configure(bg=self.kColor)
             elif player == "bolle":
                 button.configure(bg=self.bColor)
             self.__turncolor__()
 
-            # Change score list and remove color from button that isn't score anymore (The oldest score is replaced if
+            # Change score list and remove color from button that isn't scored anymore (The oldest score is replaced if
             # there's more than 3 scores for a player)
             score = self.logi.SetScore(player, num)
             if score is not None:
