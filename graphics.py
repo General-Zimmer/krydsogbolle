@@ -3,8 +3,8 @@ import logic as logik
 from functools import partial
 
 
-class gui(Frame):
-    def __init__(self, root):
+class GameFrame(Frame):
+    def __init__(self, root, onlinemode: list = None):
         self.logi = logik.logi()
         self.root = root
         root.geometry("400x200")
@@ -17,6 +17,7 @@ class gui(Frame):
         self.defaultcolor = "white"
         self.switchcolor = "green"
         self.switch = None
+        self.onlinemode = onlinemode
 
         # These buttons show whose turn it is
         self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
@@ -26,13 +27,12 @@ class gui(Frame):
 
         self.start()
 
-    def __ButtonPress__(self, x, y):
+    def _ButtonPress(self, x, y):
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
-        print(num)
 
-        def __bChanges__(player: str):
+        def _bChanges(player: str):
             # prevents changes to the opponents score
             if player == "kryds" and self.logi.getBolle().count(num) != 0:
                 return
@@ -71,7 +71,7 @@ class gui(Frame):
                 button.configure(bg=self.kColor)
             elif player == "bolle":
                 button.configure(bg=self.bColor)
-            self.__turncolor__()
+            self._turncolor()
 
             # Change score list and remove color from button that isn't scored anymore (The oldest score is replaced if
             # there's more than 3 scores for a player)
@@ -87,13 +87,23 @@ class gui(Frame):
 
         # check whose turn it is.
         if self.logi.GetTurn() == 1:
-            __bChanges__("kryds")
+            _bChanges("kryds")
         elif self.logi.GetTurn() == 0:
-            __bChanges__("bolle")
+            _bChanges("bolle")
         else:
             print("Something broke N' yeeted")
 
-    def __turncolor__(self):
+    def _turncolor(self):
+        # Yes
+        if self.onlinemode is not None:
+            if self.onlinemode[0] == "kryds":
+                self.kLabel.configure(bg=self.kColor)
+                self.bLabel.configure(bg=self.defaultcolor)
+            elif self.onlinemode[0] == "bolle":
+                self.bLabel.configure(bg=self.bColor)
+                self.kLabel.configure(bg=self.defaultcolor)
+            return
+
         # Switch the color of the side labels
         if self.logi.GetTurn() == 0:
             self.kLabel.configure(bg=self.kColor)
@@ -103,14 +113,14 @@ class gui(Frame):
             self.kLabel.configure(bg=self.defaultcolor)
         else:
             print("turncolor broke")
-        # Switches a number indicating if whose turn it is
+        # Switches a number indicating whose turn it is
         self.logi.NextTurn()
 
     # Buttons gets created with a x and y variable attached to its click function
-    def __buttons__(self, size):
+    def _buttons(self, size):
         for x in range(size):
             for y in range(size):
-                btn = Button(self.root, bg=self.defaultcolor, command=partial(self.__ButtonPress__, x, y))
+                btn = Button(self.root, bg=self.defaultcolor, command=partial(self._ButtonPress, x, y))
                 btn.grid(column=x, row=y, sticky="NSEW")
                 btn.config(width=6, height=2)
                 # Reference to button is appended in a list
@@ -123,9 +133,45 @@ class gui(Frame):
             self.root.columnconfigure(x, weight=2)
             self.root.rowconfigure(x, weight=2)
         self.root.columnconfigure(self.size + 1, weight=1)
-        self.__buttons__(self.size)
+        self._buttons(self.size)
         # Set the turn color
-        self.__turncolor__()
+        self._turncolor()
 
     def test(self):
         self.root.destroy()
+
+    def manualturn(self):
+        self.logi.NextTurn()
+
+
+class StartWindow:
+    def __init__(self, root):
+        self.root = root
+
+        self.window = Toplevel(root)
+
+        self.gameid = StringVar()
+        self.gameid.set("GameID")
+        self.kryds = Button(self.window, text="Kryds", command=self.kryds)
+        self.kryds.grid(row=0, column=0, sticky="NSEW")
+        self.bolle = Button(self.window, text="Bolle", command=self.bolle)
+        self.bolle.grid(row=0, column=1, sticky="NSEW")
+        self.entry = Entry(self.window, text=self.gameid)
+        self.entry.grid(row=1, column=0, sticky="NSEW")
+
+        root.withdraw()
+
+        for x in range(2):
+            self.window.columnconfigure(x, weight=1)
+        self.window.rowconfigure(0, weight=1)
+
+    def bolle(self):
+        self.window.destroy()
+        self.root.deiconify()
+        game = GameFrame(self.root, ["bolle"])
+        game.manualturn()
+
+    def kryds(self):
+        self.window.destroy()
+        self.root.deiconify()
+        GameFrame(self.root, ["kryds"])

@@ -1,9 +1,14 @@
-class data:
+import Mysql as mysql
+
+
+class data(mysql.database):
     def __init__(self):
+        super().__init__()
         self.pos = []
         self.turn = [1]
         self.boller = []
         self.krydser = []
+        self.OTurn = [1]
 
     def Setscore(self, player: str, num: int, button):
         result = None
@@ -31,6 +36,10 @@ class data:
                 self.krydser.pop(0)
         return result
 
+    def onlineSetup(self, player: str):
+        if player == "bolle":
+            self.OTurn = 0
+
     # Well, yea. The rest probably don't need commenting
     def nextTurn(self):
         if self.turn[0] == 1:
@@ -46,7 +55,6 @@ class data:
 
     def getTurn(self):
         return self.turn[0]
-
 
     def getBolle(self):
         return self.boller
