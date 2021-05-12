@@ -2,16 +2,21 @@ import mysql.connector
 
 
 class database:
-    # Setup a connection to the mysql database and add necessary tables
+    # Setup a connection to the mysql database
     def __init__(self):
         self.mysql = mysql.connector.connect(host="148.251.68.245", user="skole", database="skole")
         self.curs = self.mysql.cursor(buffered=True)
 
+        # With a dictionary for conversion used later
         self.dict = {
-            "name": 0,
-            "dato": 1
+            "GameID": 0,
+            "kryds": 1,
+            "bolle": 2,
+            "turn": 3,
+            "moves": 4
         }
 
+        # and add necessary tables
         self.curs.execute("SHOW TABLES")
         tables = self.curs.fetchall()
         if ('game',) not in tables:
@@ -68,6 +73,12 @@ class database:
         yeet = "" + result[self.dict.get(whatchange)]
         modify = "UPDATE game SET {change} = '{replace}' WHERE {change} = '{ree}'"
         self._do(modify.format(change=whatchange, replace=replace, ree=yeet))
+
+    def loop(self, move):
+        while True:
+            self.pull("move")
+
+
 
     # Close the connection to the database
     def close(self):

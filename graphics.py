@@ -1,6 +1,7 @@
 from tkinter import *
 import logic as logik
 from functools import partial
+from threading import *
 
 
 class GameFrame(Frame):
@@ -18,6 +19,8 @@ class GameFrame(Frame):
         self.switchcolor = "green"
         self.switch = None
         self.onlinemode = onlinemode
+
+        self.sqllopp = Thread()
 
         # These buttons show whose turn it is
         self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
@@ -137,6 +140,8 @@ class GameFrame(Frame):
         # Set the turn color
         self._turncolor()
 
+
+
     def test(self):
         self.root.destroy()
 
@@ -149,6 +154,7 @@ class StartWindow:
         self.root = root
 
         self.window = Toplevel(root)
+        self.window.protocol("WM_DELETE_WINDOW", self.root.destroy)
 
         self.gameid = StringVar()
         self.gameid.set("GameID")
@@ -158,7 +164,8 @@ class StartWindow:
         self.bolle.grid(row=0, column=1, sticky="NSEW")
         self.entry = Entry(self.window, text=self.gameid)
         self.entry.grid(row=1, column=0, sticky="NSEW")
-
+        self.entry = Button(self.window, text="solo", command=self.solo)
+        self.entry.grid(row=1, column=1, sticky="NSEW")
         root.withdraw()
 
         for x in range(2):
@@ -175,3 +182,8 @@ class StartWindow:
         self.window.destroy()
         self.root.deiconify()
         GameFrame(self.root, ["kryds"])
+
+    def solo(self):
+        self.window.destroy()
+        self.root.deiconify()
+        GameFrame(self.root)

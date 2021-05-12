@@ -9,6 +9,7 @@ class data(mysql.database):
         self.boller = []
         self.krydser = []
         self.OTurn = [1]
+        self.move = [0]
 
     def Setscore(self, player: str, num: int, button):
         result = None
