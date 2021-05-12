@@ -1,7 +1,7 @@
-import Mysql as mysql
+from Mysql import *
 
 
-class data(mysql.database):
+class data(mysql_connector):
     def __init__(self):
         super().__init__()
         self.pos = []

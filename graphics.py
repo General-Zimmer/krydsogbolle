@@ -1,16 +1,15 @@
 from tkinter import *
-import logic as logik
+from logic import *
 from functools import partial
 from threading import *
 
 
 class GameFrame(Frame):
     def __init__(self, root, onlinemode: list = None):
-        self.logi = logik.logi()
+        self.logi = logi()
         self.root = root
         root.geometry("400x200")
         Frame.__init__(self, root)
-        self.grid(sticky="NSEW")
         self.goal = 3
         self.size = 3
         self.kColor = "cyan"
@@ -28,7 +27,7 @@ class GameFrame(Frame):
         self.bLabel = Button(self.root, text="Bolle", bg=self.bColor)
         self.bLabel.grid(row=1, column=self.size + 1, sticky="NSEW")
 
-        self.start()
+        self._start()
 
     def _ButtonPress(self, x, y):
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
@@ -130,7 +129,7 @@ class GameFrame(Frame):
                 self.logi.StorePos(btn)
 
     # Function for setup things
-    def start(self):
+    def _start(self):
         # Make rows stretchable
         for x in range(self.size):
             self.root.columnconfigure(x, weight=2)
@@ -162,7 +161,7 @@ class StartWindow:
         self.kryds.grid(row=0, column=0, sticky="NSEW")
         self.bolle = Button(self.window, text="Bolle", command=self.bolle)
         self.bolle.grid(row=0, column=1, sticky="NSEW")
-        self.entry = Entry(self.window, text=self.gameid)
+        self.entry = Entry(self.window, text=self.gameid, width=6)
         self.entry.grid(row=1, column=0, sticky="NSEW")
         self.entry = Button(self.window, text="solo", command=self.solo)
         self.entry.grid(row=1, column=1, sticky="NSEW")
@@ -170,7 +169,8 @@ class StartWindow:
 
         for x in range(2):
             self.window.columnconfigure(x, weight=1)
-        self.window.rowconfigure(0, weight=1)
+            self.window.rowconfigure(x, weight=1)
+
 
     def bolle(self):
         self.window.destroy()

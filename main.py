@@ -1,8 +1,5 @@
-from tkinter import *
-import graphics as graphics
+from graphics import *
 
 Root = Tk()
-
-gfx = graphics.StartWindow(Root)
-
+StartWindow(Root)
 Root.mainloop()

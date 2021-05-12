@@ -1,9 +1,9 @@
-import data as data
+from data import *
 
 
 class logi:
     def __init__(self):
-        self.data = data.data()
+        self.data = data()
 
     def CheckWin(self, player: str):
         score = None
