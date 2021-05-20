@@ -9,14 +9,14 @@ class mysql_connector:
 
         # With a dictionary for conversion used later
         self.dict = {
-            "GameID": 0,
+            "gameid": 0,
             "kryds": 1,
             "bolle": 2,
             "turn": 3,
             "moves": 4
         }
 
-        # and add necessary tables23
+        # and add necessary tables
         self.curs.execute("SHOW TABLES")
         tables = self.curs.fetchall()
         if ('game',) not in tables:
@@ -28,21 +28,19 @@ class mysql_connector:
                 "moves INT(255))")
 
     # Make a database interaction and commit it
-    def _do(self, cmd: str, val: tuple = None):
+    def _do(self, cmd: str, val: str = None):
         if val is None:
             self.curs.execute(cmd)
         else:
             self.curs.execute(cmd, val)
 
-        if val != {"nocom": "yeet"}:
-
+        if val != "no commit":
             self.mysql.commit()
             row = self.curs.fetchone()
             if row is not None:
                 return row[0]
 
     def testrow(self, gid):
-        print(gid)
         test = "SELECT 1 FROM game WHERE gameid = {id}"
         return self._do(test.format(id=gid))
 
@@ -53,18 +51,17 @@ class mysql_connector:
         self._do(add, val)
 
     # Deletes a row in the table
-    def delete(self, ting: str, place: str = "gameid"):
-        delete = "DELETE FROM game WHERE {place} = '{ting}'"
-        self._do(delete.format(ting=ting, place=place))
+    def delete(self, ting: str, column: str = "gameid"):
+        delete = "DELETE FROM game WHERE {column} = '{ting}'"
+        self._do(delete.format(ting=ting, place=column))
 
     # Pull a row from the table
-    def pull(self, hvad: str, ting: str = "gameid"):
+    def pull(self, hvad: str, column: str = "gameid"):
         pull = "SELECT * FROM game"
-        self._do(pull.format(name=ting), {"nocom": "yeet"})
+        self._do(pull, "no commit")
         row = self.curs.fetchone()
-
         while row is not None:
-            if row[self.dict.get(ting)] == hvad:
+            if str(row[self.dict.get(column)]) == hvad:
                 return row
             else:
                 row = self.curs.fetchone()
@@ -81,11 +78,11 @@ class mysql_connector:
         # whatchange is the column you're editing
         # whatsearch is the column you're searching for
 
-    def modify(self, search: str, replace: str, whatchange: str = "moves", whatsearch: str = "GameID"):
+    def modify(self, search, replace, whatchange: str = "moves", whatsearch: str = "gameid"):
         result = self.pull(search, whatsearch)
         # Here, the dictionary is used to tie the connection between a column's number when retrieved as a list to the
         # same column in the database
-        _ = "" + result[self.dict.get(whatchange)]
+        _ = result[self.dict.get(whatchange)]
         modify = "UPDATE game SET {change} = '{replace}' WHERE {change} = '{_}'"
         self._do(modify.format(change=whatchange, replace=replace, _=_))
 

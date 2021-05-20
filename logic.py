@@ -8,9 +8,15 @@ class logi:
     def CheckWin(self, player: str):
         score = None
         # Get sorted list of the data to be checked
-        if player == "kryds":
+        print(len(self.data.getKryds()))
+        print(len(self.data.getBolle()))
+        if len(self.data.getKryds()) == 0 or len(self.data.getBolle()) == 0:
+            return None
+        if player == "kryds" and self.data.getKryds() is not None:
+            print("fuck you")
             score = sorted(self.data.getKryds())
-        elif player == "bolle":
+        elif player == "bolle" and self.data.getBolle() is not None:
+            print("fuck you v2")
             score = sorted(self.data.getBolle())
 
         # You can't win if you don't have 3 scores
@@ -59,7 +65,7 @@ class logi:
         self.data.nextTurn()
 
     def getTurn(self):
-        return self.data.turn[0]
+        return self.data.turn
 
     def getonlineMode(self):
         return self.data.onlinemode
@@ -75,3 +81,6 @@ class logi:
 
     def getdeadness(self):
         return self.data.deadprogram
+
+    def onlinenext(self):
+        self.data.onlinenext()

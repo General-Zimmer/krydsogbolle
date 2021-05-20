@@ -10,6 +10,7 @@ class GameFrame(Frame):
         self.logi = logi(onlinemode, gameid)
         self.root = root
         root.geometry("400x200")
+        root.title("Fuck Zilas")
         Frame.__init__(self, root)
         self.goal = 3
         self.size = 3
@@ -34,10 +35,13 @@ class GameFrame(Frame):
         self._start()
 
     def _ButtonPress(self, x, y):
-        if self.logi.getonlineMode()[0] == "kryds" and self.logi.getTurn() == 0:
-            return
-        if self.logi.getonlineMode()[0] == "bolle" and self.logi.getTurn() == 1:
-            return
+        try:
+            if self.logi.getonlineMode()[0] == "kryds" and self.logi.getTurn() == 0:
+                return
+            if self.logi.getonlineMode()[0] == "bolle" and self.logi.getTurn() == 1:
+                return
+        except TypeError:
+            pass
 
 
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
@@ -97,6 +101,7 @@ class GameFrame(Frame):
             if whoWon is not None:
                 pass
 
+
         # check whose turn it is.
         if self.logi.getTurn() == 1:
             _bChanges("kryds")
@@ -104,6 +109,8 @@ class GameFrame(Frame):
             _bChanges("bolle")
         else:
             print("Something broke N' yeeted")
+        if self.onlinemode is not None:
+            self.logi.onlinenext()
 
     def _turncolor(self):
 
@@ -143,7 +150,7 @@ class GameFrame(Frame):
     def test(self):
         self.root.destroy()
 
-    def manualturn(self):
+    def _manualturn(self):
         self.logi.nextTurn()
 
     def setdeadness(self):
@@ -155,7 +162,11 @@ class GameFrame(Frame):
                 break
             if self.logi.getonlineMode()[0] == "kryds":
                 if self.logi.getTurn() == 0:
-                    pass
+                    game = mysql_connector.pull(self, self.gameid)
+                    self.krydser = game[1]
+                    self.boller = game[2]
+                    self.turn = game[3]
+                    self.move = game[4]
             elif self.logi.getonlineMode()[0] == "bolle":
                 if self.logi.getTurn() == 1:
                     pass
@@ -177,8 +188,8 @@ class StartWindow:
         self.bolle.grid(row=0, column=1, sticky="NSEW")
         self.entry = Entry(self.window, text=self.gameid, width=6)
         self.entry.grid(row=1, column=0, sticky="NSEW")
-        self.entry = Button(self.window, text="solo", command=self.solo)
-        self.entry.grid(row=1, column=1, sticky="NSEW")
+        self.offline = Button(self.window, text="offline", command=self.offline)
+        self.offline.grid(row=1, column=1, sticky="NSEW")
         root.withdraw()
 
         self.GameFrame = None
@@ -198,7 +209,7 @@ class StartWindow:
         self.root.deiconify()
         self.GameFrame = GameFrame(self.root, self.gameid.get(), ["kryds"])
 
-    def solo(self):
+    def offline(self):
         self.window.destroy()
         self.root.deiconify()
         self.GameFrame = GameFrame(self.root)
