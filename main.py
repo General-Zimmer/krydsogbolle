@@ -1,5 +1,6 @@
 from graphics import *
 
 Root = Tk()
-StartWindow(Root)
+window = StartWindow(Root)
 Root.mainloop()
+window.setdeadness()

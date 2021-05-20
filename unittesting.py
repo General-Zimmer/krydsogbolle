@@ -68,7 +68,7 @@ class DatabaseTests(unittest.TestCase):
     # det hele i en test modul
     def test_all(self):
         self.sql.add("testing da test test", "yeet")
-        self.sql.modify("testing da test test", "meat")
+        self.sql.modify("testing da test test", "meat", "bolle", "kryds")
         row = self.sql.pull("testing da test test")
         self.assertEqual(row[1], "meat")
 

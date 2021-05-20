@@ -2,14 +2,31 @@ from Mysql import *
 
 
 class data(mysql_connector):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, onlinemode, gameid):
+        mysql_connector.__init__(self)
         self.pos = []
         self.turn = [1]
         self.boller = []
         self.krydser = []
-        self.OTurn = [1]
+        self.onlinemode = onlinemode
         self.move = [0]
+        self.deadprogram = False
+        self.gameid = gameid
+
+        if self.onlinemode is not None:
+            test = mysql_connector.testrow(self, self.gameid)
+            print(test)
+            print("maybe")
+            if test == 1:
+                game = mysql_connector.pull(self, gameid)
+                print(game)
+                self.krydser = game[1]
+                self.boller = game[2]
+                self.turn = game[3]
+                self.move = game[4]
+            else:
+                print("no")
+                mysql_connector.add(self, self.gameid, "None", "None", self.turn[0], "0")
 
     def Setscore(self, player: str, num: int, button):
         result = None
@@ -37,17 +54,14 @@ class data(mysql_connector):
                 self.krydser.pop(0)
         return result
 
-    def onlineSetup(self, player: str):
-        if player == "bolle":
-            self.OTurn = 0
-
-    # Well, yea. The rest probably don't need commenting
+    # Switches a number indicating whose turn it is
     def nextTurn(self):
         if self.turn[0] == 1:
             self.turn[0] = 0
         elif self.turn[0] == 0:
             self.turn[0] = 1
 
+    # Well, yea. The rest probably don't need commenting
     def addpos(self, content):
         self.pos.append(content)
 
@@ -62,3 +76,15 @@ class data(mysql_connector):
 
     def getKryds(self):
         return self.krydser
+
+    def getonlineMode(self):
+        return self.onlinemode
+
+    def getdeadness(self):
+        return self.deadprogram
+
+    def setdeadness(self):
+        self.deadprogram = True
+
+    def setgameid(self, gid):
+        self.gameid = gid

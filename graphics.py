@@ -2,11 +2,12 @@ from tkinter import *
 from logic import *
 from functools import partial
 from threading import *
+from time import *
 
 
 class GameFrame(Frame):
-    def __init__(self, root, onlinemode: list = None):
-        self.logi = logi()
+    def __init__(self, root, gameid: int = None, onlinemode: list = None):
+        self.logi = logi(onlinemode, gameid)
         self.root = root
         root.geometry("400x200")
         Frame.__init__(self, root)
@@ -19,7 +20,10 @@ class GameFrame(Frame):
         self.switch = None
         self.onlinemode = onlinemode
 
-        self.sqllopp = Thread()
+        # Start mysql fetcher thread
+        self.loop = Thread(target=self.mysqlLoop)
+        if self.onlinemode is not None:
+            self.loop.start()
 
         # These buttons show whose turn it is
         self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
@@ -30,6 +34,12 @@ class GameFrame(Frame):
         self._start()
 
     def _ButtonPress(self, x, y):
+        if self.logi.getonlineMode()[0] == "kryds" and self.logi.getTurn() == 0:
+            return
+        if self.logi.getonlineMode()[0] == "bolle" and self.logi.getTurn() == 1:
+            return
+
+
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
@@ -88,35 +98,26 @@ class GameFrame(Frame):
                 pass
 
         # check whose turn it is.
-        if self.logi.GetTurn() == 1:
+        if self.logi.getTurn() == 1:
             _bChanges("kryds")
-        elif self.logi.GetTurn() == 0:
+        elif self.logi.getTurn() == 0:
             _bChanges("bolle")
         else:
             print("Something broke N' yeeted")
 
     def _turncolor(self):
-        # Yes
-        if self.onlinemode is not None:
-            if self.onlinemode[0] == "kryds":
-                self.kLabel.configure(bg=self.kColor)
-                self.bLabel.configure(bg=self.defaultcolor)
-            elif self.onlinemode[0] == "bolle":
-                self.bLabel.configure(bg=self.bColor)
-                self.kLabel.configure(bg=self.defaultcolor)
-            return
 
         # Switch the color of the side labels
-        if self.logi.GetTurn() == 0:
+        if self.logi.getTurn() == 0:
             self.kLabel.configure(bg=self.kColor)
             self.bLabel.configure(bg=self.defaultcolor)
-        elif self.logi.GetTurn() == 1:
+        elif self.logi.getTurn() == 1:
             self.bLabel.configure(bg=self.bColor)
             self.kLabel.configure(bg=self.defaultcolor)
         else:
             print("turncolor broke")
         # Switches a number indicating whose turn it is
-        self.logi.NextTurn()
+        self.logi.nextTurn()
 
     # Buttons gets created with a x and y variable attached to its click function
     def _buttons(self, size):
@@ -139,13 +140,26 @@ class GameFrame(Frame):
         # Set the turn color
         self._turncolor()
 
-
-
     def test(self):
         self.root.destroy()
 
     def manualturn(self):
-        self.logi.NextTurn()
+        self.logi.nextTurn()
+
+    def setdeadness(self):
+        self.logi.setdeadness()
+
+    def mysqlLoop(self):
+        while True:
+            if self.logi.getdeadness():
+                break
+            if self.logi.getonlineMode()[0] == "kryds":
+                if self.logi.getTurn() == 0:
+                    pass
+            elif self.logi.getonlineMode()[0] == "bolle":
+                if self.logi.getTurn() == 1:
+                    pass
+            sleep(1)
 
 
 class StartWindow:
@@ -167,6 +181,8 @@ class StartWindow:
         self.entry.grid(row=1, column=1, sticky="NSEW")
         root.withdraw()
 
+        self.GameFrame = None
+
         for x in range(2):
             self.window.columnconfigure(x, weight=1)
             self.window.rowconfigure(x, weight=1)
@@ -175,15 +191,19 @@ class StartWindow:
     def bolle(self):
         self.window.destroy()
         self.root.deiconify()
-        game = GameFrame(self.root, ["bolle"])
-        game.manualturn()
+        self.GameFrame = GameFrame(self.root, self.gameid.get(), ["bolle"])
 
     def kryds(self):
         self.window.destroy()
         self.root.deiconify()
-        GameFrame(self.root, ["kryds"])
+        self.GameFrame = GameFrame(self.root, self.gameid.get(), ["kryds"])
 
     def solo(self):
         self.window.destroy()
         self.root.deiconify()
-        GameFrame(self.root)
+        self.GameFrame = GameFrame(self.root)
+
+    def setdeadness(self):
+        if self.GameFrame is not None:
+            self.GameFrame.setdeadness()
+

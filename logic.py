@@ -2,8 +2,8 @@ from data import *
 
 
 class logi:
-    def __init__(self):
-        self.data = data()
+    def __init__(self, onlinemode, gameid):
+        self.data = data(onlinemode, gameid)
 
     def CheckWin(self, player: str):
         score = None
@@ -55,10 +55,23 @@ class logi:
     def getKryds(self):
         return self.data.getKryds()
 
-    def NextTurn(self):
+    def nextTurn(self):
         self.data.nextTurn()
 
-    def GetTurn(self):
+    def getTurn(self):
         return self.data.turn[0]
 
+    def getonlineMode(self):
+        return self.data.onlinemode
 
+    def stoploop(self):
+        pass
+
+    def setdeadness(self):
+        self.data.setdeadness()
+
+    def setgameid(self, gid):
+        self.data.setgameid(gid)
+
+    def getdeadness(self):
+        return self.data.deadprogram
