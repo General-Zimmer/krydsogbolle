@@ -8,11 +8,11 @@ from time import *
 
 
 class GameFrame(Frame):
-    def __init__(self, root, gameid: int = None, onlinemode: list = None):
+    def __init__(self, root, gameid: int = None, onlinemode: str = None):
         self.logi = logi(onlinemode, gameid)
         self.root = root
         root.geometry("400x200")
-        root.title("Fuck Zilas")
+        root.title("Kryds og bolle")
         Frame.__init__(self, root)
         self.goal = 3
         self.size = 3
@@ -183,7 +183,10 @@ class GameFrame(Frame):
         while True:
             if self.logi.getdeadness():
                 break
-            if self.onlinemode == "kryds" and self.logi.getTurn() != 1:
+            print(self.logi.getTurn())
+            if self.onlinemode == "kryds" and self.logi.getTurn() == 0:
+                print()
+                print("mysql")
                 if self.logi.getmove() != self.logi.getonlinemove():
 
 
@@ -191,13 +194,14 @@ class GameFrame(Frame):
                     self._turncolor()
                     self.resetbuttcolors()
                     print("update")
-            if self.onlinemode == "bolle" and self.logi.getTurn() != 0:
+            if self.onlinemode == "bolle" and self.logi.getTurn() == 1:
+                print("mysql")
                 if self.logi.getmove() != self.logi.getonlinemove():
                     self.logi.getonlineData()
                     self._turncolor()
                     self.resetbuttcolors()
                     print("update")
-            print("mysql")
+
             sleep(1)
 
 
@@ -231,7 +235,7 @@ class StartWindow:
             if int(self.gameid.get()) is not int:
                 self.window.destroy()
                 self.root.deiconify()
-                self.GameFrame = GameFrame(self.root, self.gameid.get(), ["bolle"])
+                self.GameFrame = GameFrame(self.root, self.gameid.get(), "bolle")
             else:
                 messagebox.showwarning("Error 18", "This is not a valid GameID")
         except ValueError:
@@ -243,7 +247,7 @@ class StartWindow:
             if int(self.gameid.get()) is not int:
                 self.window.destroy()
                 self.root.deiconify()
-                self.GameFrame = GameFrame(self.root, self.gameid.get(), ["kryds"])
+                self.GameFrame = GameFrame(self.root, self.gameid.get(), "kryds")
             else:
                 messagebox.showwarning("Error 18", "This is not a valid GameID")
         except ValueError:

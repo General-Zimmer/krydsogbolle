@@ -67,6 +67,7 @@ class mysql_connector:
 
             else:
                 row = self.curs.fetchone()
+                self.mysql.commit()
 
     # Pull all rows
     def pullall(self):
