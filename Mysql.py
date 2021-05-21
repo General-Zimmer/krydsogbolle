@@ -63,7 +63,6 @@ class mysql_connector:
         self.mysql.commit()
         while row is not None:
             if str(row[self.dict.get(column)]) == hvad:
-                print(row)
                 return row
 
             else:
@@ -82,7 +81,6 @@ class mysql_connector:
         # whatsearch is the column you're searching for
 
     def modify(self, search, replace, whatchange: str = "moves", whatsearch: str = "gameid"):
-        print(replace)
         modify = "UPDATE game SET {whatchange} = '{replace}' WHERE {whatsearch} = '{_}'"
         self._do(modify.format(whatsearch=whatsearch, whatchange=whatchange, replace=replace, _=search))
 

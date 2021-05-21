@@ -52,7 +52,6 @@ class data(mysql_connector):
         bollelst = [str(i) for i in self.boller]
         try:
             kryds = " ".join(krydslst)
-            print(kryds)
         except TypeError:
             kryds = ""
         try:
@@ -70,7 +69,6 @@ class data(mysql_connector):
         game = mysql_connector.pull(self, self.gameid)
         kryds = [int(i) for i in game[1].split()]
         bolle = [int(i) for i in game[2].split()]
-        print(kryds)
         self.krydser = kryds
         self.boller = bolle
         self.turn = int(game[3])

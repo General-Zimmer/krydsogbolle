@@ -39,6 +39,7 @@ class GameFrame(Frame):
             self.loop.start()
 
     def _ButtonPress(self, x, y):
+        print(self.logi.getTurn())
         try:
             if self.logi.getonlineMode()[0] == "kryds" and self.logi.getTurn() == 0:
                 return
@@ -112,8 +113,7 @@ class GameFrame(Frame):
             _bChanges("bolle")
         else:
             print("Something broke N' yeeted")
-        if self.onlinemode is not None:
-            self.logi.nextTurn()
+        self._turncolor()
 
     def _turncolor(self):
         if self.onlinemode is not None:
@@ -137,6 +137,7 @@ class GameFrame(Frame):
         # Switches a number indicating whose turn it is
 
         self.logi.nextTurn()
+
 
     # Buttons gets created with a x and y variable attached to its click function
     def _buttons(self, size):
