@@ -115,6 +115,8 @@ class GameFrame(Frame):
             _bChanges("bolle")
         else:
             print("Something broke N' yeeted")
+        if self.onlinemode is not None:
+            self.logi.nextTurn()
 
     def _turncolor(self):
         if self.onlinemode is not None:
@@ -193,6 +195,7 @@ class GameFrame(Frame):
                     self.logi.getonlineData()
                     self._turncolor()
             self.resetbuttcolors()
+            print("mysql")
             sleep(1)
 
 
