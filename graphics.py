@@ -187,7 +187,7 @@ class GameFrame(Frame):
             if self.logi.getdeadness():
                 break
 
-            if self.logi.getmove() == self.logi.getonlinemove():
+            if self.logi.getmove() != self.logi.getonlinemove():
                 self.logi.getonlineData()
                 self._turncolor()
                 self.resetbuttcolors()
