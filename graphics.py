@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import messagebox
+
 from logic import *
 from functools import partial
 from threading import *
@@ -21,10 +23,7 @@ class GameFrame(Frame):
         self.switch = None
         self.onlinemode = onlinemode
 
-        # Start mysql fetcher thread
-        self.loop = Thread(target=self.mysqlLoop)
-        if self.onlinemode is not None:
-            self.loop.start()
+
 
         # These buttons show whose turn it is
         self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
@@ -33,6 +32,11 @@ class GameFrame(Frame):
         self.bLabel.grid(row=1, column=self.size + 1, sticky="NSEW")
 
         self._start()
+
+        # Start mysql fetcher thread
+        self.loop = Thread(target=self.mysqlLoop)
+        if self.onlinemode is not None:
+            self.loop.start()
 
     def _ButtonPress(self, x, y):
         try:
@@ -43,10 +47,11 @@ class GameFrame(Frame):
         except TypeError:
             pass
 
-
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
+        print(self.logi.getKryds())
+        print(self.logi.getBolle())
 
         def _bChanges(player: str):
             # prevents changes to the opponents score
@@ -100,7 +105,8 @@ class GameFrame(Frame):
             whoWon = self.logi.CheckWin(player)
             if whoWon is not None:
                 pass
-
+            print(self.logi.getKryds())
+            self.logi.onlinenext()
 
         # check whose turn it is.
         if self.logi.getTurn() == 1:
@@ -109,10 +115,16 @@ class GameFrame(Frame):
             _bChanges("bolle")
         else:
             print("Something broke N' yeeted")
-        if self.onlinemode is not None:
-            self.logi.onlinenext()
 
     def _turncolor(self):
+        if self.onlinemode is not None:
+            if self.logi.getTurn() == 1:
+                self.kLabel.configure(bg=self.kColor)
+                self.bLabel.configure(bg=self.defaultcolor)
+            elif self.logi.getTurn() == 0:
+                self.bLabel.configure(bg=self.bColor)
+                self.kLabel.configure(bg=self.defaultcolor)
+            return
 
         # Switch the color of the side labels
         if self.logi.getTurn() == 0:
@@ -124,6 +136,7 @@ class GameFrame(Frame):
         else:
             print("turncolor broke")
         # Switches a number indicating whose turn it is
+
         self.logi.nextTurn()
 
     # Buttons gets created with a x and y variable attached to its click function
@@ -136,6 +149,14 @@ class GameFrame(Frame):
                 # Reference to button is appended in a list
                 self.logi.StorePos(btn)
 
+    def resetbuttcolors(self):
+        for _ in range(self.size * self.size):
+            butt = self.logi.getPos()[_]
+            if _ in self.logi.getBolle():
+                butt.configure(bg=self.bColor)
+            if _ in self.logi.getKryds():
+                butt.configure(bg=self.kColor)
+
     # Function for setup things
     def _start(self):
         # Make rows stretchable
@@ -144,6 +165,9 @@ class GameFrame(Frame):
             self.root.rowconfigure(x, weight=2)
         self.root.columnconfigure(self.size + 1, weight=1)
         self._buttons(self.size)
+        print("start first")
+        self.resetbuttcolors()
+
         # Set the turn color
         self._turncolor()
 
@@ -162,14 +186,13 @@ class GameFrame(Frame):
                 break
             if self.logi.getonlineMode()[0] == "kryds":
                 if self.logi.getTurn() == 0:
-                    game = mysql_connector.pull(self, self.gameid)
-                    self.krydser = game[1]
-                    self.boller = game[2]
-                    self.turn = game[3]
-                    self.move = game[4]
+                    self.logi.getonlineData()
+                    self._turncolor()
             elif self.logi.getonlineMode()[0] == "bolle":
                 if self.logi.getTurn() == 1:
-                    pass
+                    self.logi.getonlineData()
+                    self._turncolor()
+            self.resetbuttcolors()
             sleep(1)
 
 
@@ -198,16 +221,29 @@ class StartWindow:
             self.window.columnconfigure(x, weight=1)
             self.window.rowconfigure(x, weight=1)
 
-
     def bolle(self):
-        self.window.destroy()
-        self.root.deiconify()
-        self.GameFrame = GameFrame(self.root, self.gameid.get(), ["bolle"])
+        try:
+            if int(self.gameid.get()) is not int:
+                self.window.destroy()
+                self.root.deiconify()
+                self.GameFrame = GameFrame(self.root, self.gameid.get(), ["bolle"])
+            else:
+                messagebox.showwarning("Error 18", "This is not a valid GameID")
+        except ValueError:
+            messagebox.showwarning("Error 18", "This is not a valid GameID")
+            return
 
     def kryds(self):
-        self.window.destroy()
-        self.root.deiconify()
-        self.GameFrame = GameFrame(self.root, self.gameid.get(), ["kryds"])
+        try:
+            if int(self.gameid.get()) is not int:
+                self.window.destroy()
+                self.root.deiconify()
+                self.GameFrame = GameFrame(self.root, self.gameid.get(), ["kryds"])
+            else:
+                messagebox.showwarning("Error 18", "This is not a valid GameID")
+        except ValueError:
+            messagebox.showwarning("Error 18", "This is not a valid GameID")
+            return
 
     def offline(self):
         self.window.destroy()
@@ -217,4 +253,3 @@ class StartWindow:
     def setdeadness(self):
         if self.GameFrame is not None:
             self.GameFrame.setdeadness()
-

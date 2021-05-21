@@ -9,29 +9,18 @@ class data(mysql_connector):
         self.boller = []
         self.krydser = []
         self.onlinemode = onlinemode
-        self.move = [0]
+        self.move = 0
         self.deadprogram = False
         self.gameid = gameid
 
         if self.onlinemode is not None:
             if mysql_connector.testrow(self, self.gameid) == 1:
-                game = mysql_connector.pull(self, self.gameid)
-                kryds = game[1].split()
-                bolle = game[2].split()
-                if "None" in kryds:
-                    kryds = []
-                if "None" in bolle:
-                    bolle = []
-                self.krydser = kryds
-                self.boller = bolle
-                print(self.krydser)
-                print(self.boller)
-                self.turn = game[3]
-                self.move = game[4]
+                print("Data first")
+                self.getonlineData()
 
             else:
                 print("no")
-                mysql_connector.add(self, self.gameid, "None", "None", self.turn, 0)
+                mysql_connector.add(self, self.gameid, self.turn, 0)
 
     def Setscore(self, player: str, num: int, button):
         result = None
@@ -60,25 +49,36 @@ class data(mysql_connector):
         return result
 
     def onlinenext(self):
-        kryds = ""
-        bolle = ""
-        for _ in range(len(self.krydser)):
-            if _ == len(self.krydser):
-                kryds + "{_}".format(_=self.krydser[_])
-            else:
-                kryds + ("{_} ".format(_=self.krydser[_]))
 
-        for _ in range(len(self.boller)):
-            if _ == len(self.boller):
-                kryds + "{_}".format(_=self.boller[_])
-            else:
-                kryds + ("{_} ".format(_=self.boller[_]))
-
-
-        mysql_connector.modify(self, self.gameid, self.move)
-        mysql_connector.modify(self, self.gameid, self.turn, "turn")
+        krydslst = [str(i) for i in self.krydser]
+        bollelst = [str(i) for i in self.boller]
+        try:
+            kryds = " ".join(krydslst)
+            print(kryds)
+        except TypeError:
+            kryds = ""
+        try:
+            bolle = " ".join(bollelst)
+        except TypeError:
+            bolle = ""
+        print(kryds)
+        print(bolle)
+        self.nextTurn()
+        mysql_connector.modify(self, self.gameid, 1 + self.move)
+        mysql_connector.modify(self, self.gameid, str(self.turn), "turn")
         mysql_connector.modify(self, self.gameid, kryds, "kryds")
         mysql_connector.modify(self, self.gameid, bolle, "bolle")
+
+    def getonlineData(self):
+
+        game = mysql_connector.pull(self, self.gameid)
+        kryds = [int(i) for i in game[1].split()]
+        bolle = [int(i) for i in game[2].split()]
+        print(kryds)
+        self.krydser = kryds
+        self.boller = bolle
+        self.turn = int(game[3])
+        self.move = int(game[4])
 
     # Switches a number indicating whose turn it is
     def nextTurn(self):
@@ -114,5 +114,3 @@ class data(mysql_connector):
 
     def setgameid(self, gid):
         self.gameid = gid
-
-
