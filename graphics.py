@@ -185,11 +185,11 @@ class GameFrame(Frame):
             if self.logi.getdeadness():
                 break
             if self.logi.getonlineMode()[0] == "kryds":
-                if self.logi.getTurn() == 0:
+                if self.logi.getTurn() == 1:
                     self.logi.getonlineData()
                     self._turncolor()
             elif self.logi.getonlineMode()[0] == "bolle":
-                if self.logi.getTurn() == 1:
+                if self.logi.getTurn() == 0:
                     self.logi.getonlineData()
                     self._turncolor()
             self.resetbuttcolors()
