@@ -30,9 +30,9 @@ class mysql_connector:
     # Make a database interaction and commit it
     def _do(self, cmd: str, val = None):
         if val is None:
-            self.curs.execute(cmd, multi=True)
+            self.curs.execute(cmd)
         else:
-            self.curs.execute(cmd, val, multi=True)
+            self.curs.execute(cmd, val)
 
         if val != "no commit":
             self.mysql.commit()

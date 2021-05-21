@@ -50,8 +50,6 @@ class GameFrame(Frame):
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
-        print(self.logi.getKryds())
-        print(self.logi.getBolle())
 
         def _bChanges(player: str):
             # prevents changes to the opponents score
@@ -105,7 +103,6 @@ class GameFrame(Frame):
             whoWon = self.logi.CheckWin(player)
             if whoWon is not None:
                 pass
-            print(self.logi.getKryds())
             self.logi.onlinenext()
 
         # check whose turn it is.
@@ -167,7 +164,6 @@ class GameFrame(Frame):
             self.root.rowconfigure(x, weight=2)
         self.root.columnconfigure(self.size + 1, weight=1)
         self._buttons(self.size)
-        print("start first")
         self.resetbuttcolors()
 
         # Set the turn color
@@ -189,6 +185,7 @@ class GameFrame(Frame):
             print(self.logi.getmove())
             print(self.logi.getonlinemove())
             if self.logi.getmove() != self.logi.getonlinemove():
+
 
                 self.logi.getonlineData()
                 self._turncolor()

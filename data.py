@@ -15,12 +15,10 @@ class data(mysql_connector):
 
         if self.onlinemode is not None:
             if mysql_connector.testrow(self, self.gameid) == 1:
-                print("Data first")
                 self.getonlineData()
-
             else:
                 print("no")
-                mysql_connector.add(self, self.gameid, self.turn, 0)
+                mysql_connector.add(self, self.gameid, self.turn, self.move)
 
     def Setscore(self, player: str, num: int, button):
         result = None
