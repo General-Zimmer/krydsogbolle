@@ -11,8 +11,6 @@ class GameFrame(Frame):
     def __init__(self, root, gameid: int = None, onlinemode: str = None):
         self.logi = logi(onlinemode, gameid)
         self.root = root
-        root.geometry("400x200")
-        root.title("Kryds og bolle")
         Frame.__init__(self, root)
         self.goal = 3
         self.size = 3
@@ -208,9 +206,14 @@ class GameFrame(Frame):
 class StartWindow:
     def __init__(self, root):
         self.root = root
+        root.geometry("400x200")
+        root.title("Kryds og bolle")
 
         self.window = Toplevel(root)
         self.window.protocol("WM_DELETE_WINDOW", self.root.destroy)
+        self.window.geometry("200x100")
+        self.window.title("Kryds og bolle")
+
 
         self.gameid = StringVar()
         self.gameid.set("GameID")
