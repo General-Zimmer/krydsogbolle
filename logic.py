@@ -83,3 +83,9 @@ class logi:
 
     def getonlineData(self):
         self.data.getonlineData()
+
+    def getmove(self):
+        return self.data.getmove
+
+    def getonlinemove(self):
+        return self.data.getonlinemove

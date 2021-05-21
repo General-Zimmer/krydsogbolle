@@ -114,3 +114,9 @@ class data(mysql_connector):
 
     def setgameid(self, gid):
         self.gameid = gid
+
+    def getmove(self):
+        return self.move
+
+    def getonlinemove(self):
+        return mysql_connector.pull(self.gameid)[4]

@@ -186,15 +186,12 @@ class GameFrame(Frame):
         while True:
             if self.logi.getdeadness():
                 break
-            if self.logi.getonlineMode()[0] == "kryds":
-                if self.logi.getTurn() == 1:
-                    self.logi.getonlineData()
-                    self._turncolor()
-            elif self.logi.getonlineMode()[0] == "bolle":
-                if self.logi.getTurn() == 0:
-                    self.logi.getonlineData()
-                    self._turncolor()
-            self.resetbuttcolors()
+
+            if self.logi.getmove() == self.logi.getonlinemove():
+                self.logi.getonlineData()
+                self._turncolor()
+                self.resetbuttcolors()
+                print("update")
             print("mysql")
             sleep(1)
 
