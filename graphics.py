@@ -150,6 +150,7 @@ class GameFrame(Frame):
     def resetbuttcolors(self):
         for _ in range(self.size * self.size):
             butt = self.logi.getPos()[_]
+            butt.configure(bg=self.defaultcolor)
             if _ in self.logi.getBolle():
                 butt.configure(bg=self.bColor)
             if _ in self.logi.getKryds():

@@ -1,12 +1,14 @@
 import mysql.connector
 from threading import Lock
 
+
 class mysql_connector:
     # Setup a connection to the mysql database
     def __init__(self):
         self.mysql = mysql.connector.connect(host="148.251.68.245", user="skole", database="skole")
         self.curs = self.mysql.cursor(buffered=True)
-        self.lock = Lock()
+        self.glock = Lock()
+        self.commitlock = Lock()
         # With a dictionary for conversion used later
         self.dict = {
             "gameid": 0,
@@ -28,8 +30,8 @@ class mysql_connector:
                 "moves INT(255))")
 
     # Make a database interaction and commit it
-    def _do(self, cmd: str, val = None):
-        self.lock.acquire()
+    def _do(self, cmd: str, val=None):
+        self.commitlock.acquire()
         try:
             if val is None:
                 self.curs.execute(cmd)
@@ -42,7 +44,7 @@ class mysql_connector:
                 if row is not None:
                     return row[0]
         finally:
-            self.lock.release()
+            self.commitlock.release()
 
     def testrow(self, gid):
         test = "SELECT 1 FROM game WHERE gameid = {id}"
@@ -61,17 +63,21 @@ class mysql_connector:
 
     # Pull a row from the table
     def pull(self, hvad: str, column: str = "gameid"):
-        pull = "SELECT * FROM game"
-        self._do(pull, "no commit")
-        row = self.curs.fetchone()
-        self.mysql.commit()
-        while row is not None:
-            if str(row[self.dict.get(column)]) == hvad:
-                return row
+        self.glock.acquire()
+        try:
+            pull = "SELECT * FROM game"
+            self._do(pull, "no commit")
+            row = self.curs.fetchone()
+            self.mysql.commit()
+            while row is not None:
+                if str(row[self.dict.get(column)]) == hvad:
+                    return row
 
-            else:
-                row = self.curs.fetchone()
-                self.mysql.commit()
+                else:
+                    row = self.curs.fetchone()
+                    self.mysql.commit()
+        finally:
+            self.glock.release()
 
     # Pull all rows
     def pullall(self):
