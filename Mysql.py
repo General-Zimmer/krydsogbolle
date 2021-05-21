@@ -60,9 +60,12 @@ class mysql_connector:
         pull = "SELECT * FROM game"
         self._do(pull, "no commit")
         row = self.curs.fetchone()
+        self.mysql.commit()
         while row is not None:
             if str(row[self.dict.get(column)]) == hvad:
+                print(row)
                 return row
+
             else:
                 row = self.curs.fetchone()
 
