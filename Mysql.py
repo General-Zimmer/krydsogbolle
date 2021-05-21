@@ -1,12 +1,12 @@
 import mysql.connector
-
+from threading import Lock
 
 class mysql_connector:
     # Setup a connection to the mysql database
     def __init__(self):
         self.mysql = mysql.connector.connect(host="148.251.68.245", user="skole", database="skole")
         self.curs = self.mysql.cursor(buffered=True)
-
+        self.lock = Lock()
         # With a dictionary for conversion used later
         self.dict = {
             "gameid": 0,
@@ -29,16 +29,20 @@ class mysql_connector:
 
     # Make a database interaction and commit it
     def _do(self, cmd: str, val = None):
-        if val is None:
-            self.curs.execute(cmd)
-        else:
-            self.curs.execute(cmd, val)
+        self.lock.acquire()
+        try:
+            if val is None:
+                self.curs.execute(cmd)
+            else:
+                self.curs.execute(cmd, val)
 
-        if val != "no commit":
-            self.mysql.commit()
-            row = self.curs.fetchone()
-            if row is not None:
-                return row[0]
+            if val != "no commit":
+                self.mysql.commit()
+                row = self.curs.fetchone()
+                if row is not None:
+                    return row[0]
+        finally:
+            self.lock.release()
 
     def testrow(self, gid):
         test = "SELECT 1 FROM game WHERE gameid = {id}"

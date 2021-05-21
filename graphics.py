@@ -133,7 +133,7 @@ class GameFrame(Frame):
         else:
             print("turncolor broke")
         # Switches a number indicating whose turn it is
-
+        print("switched")
         self.logi.nextTurn()
 
 
@@ -171,9 +171,6 @@ class GameFrame(Frame):
     def test(self):
         self.root.destroy()
 
-    def _manualturn(self):
-        self.logi.nextTurn()
-
     def setdeadness(self):
         self.logi.setdeadness()
 
@@ -183,15 +180,14 @@ class GameFrame(Frame):
                 break
             print(self.logi.getTurn())
             if self.onlinemode == "kryds" and self.logi.getTurn() == 0:
-                print()
                 print("mysql")
                 if self.logi.getmove() != self.logi.getonlinemove():
-
 
                     self.logi.getonlineData()
                     self._turncolor()
                     self.resetbuttcolors()
                     print("update")
+                    sleep(1)
             if self.onlinemode == "bolle" and self.logi.getTurn() == 1:
                 print("mysql")
                 if self.logi.getmove() != self.logi.getonlinemove():
@@ -199,6 +195,7 @@ class GameFrame(Frame):
                     self._turncolor()
                     self.resetbuttcolors()
                     print("update")
+                    sleep(1)
 
             sleep(1)
 
