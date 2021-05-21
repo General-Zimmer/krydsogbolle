@@ -61,8 +61,6 @@ class data(mysql_connector):
             bolle = " ".join(bollelst)
         except TypeError:
             bolle = ""
-        print(kryds)
-        print(bolle)
         self.nextTurn()
         mysql_connector.modify(self, self.gameid, 1 + self.move)
         mysql_connector.modify(self, self.gameid, str(self.turn), "turn")
@@ -119,4 +117,4 @@ class data(mysql_connector):
         return self.move
 
     def getonlinemove(self):
-        return mysql_connector.pull(self.gameid)[4]
+        return mysql_connector.pull(self, self.gameid)[4]
