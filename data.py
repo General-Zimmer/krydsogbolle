@@ -22,7 +22,9 @@ class data(mysql_connector):
 
     def Setscore(self, player: str, num: int, button):
         result = None
+        print(button)
         if player == "bolle":
+
             # check if a score is being replaced, then remove it
             if button is not None:
                 self.boller.remove(button)
@@ -33,7 +35,9 @@ class data(mysql_connector):
             if len(self.boller) >= 4:
                 result = self.boller[0]
                 self.boller.pop(0)
+            print(self.boller)
         elif player == "kryds":
+
             # check if a button is being replaced, then remove it
             if button is not None:
                 self.krydser.remove(button)
@@ -44,6 +48,7 @@ class data(mysql_connector):
             if len(self.krydser) >= 4:
                 result = self.krydser[0]
                 self.krydser.pop(0)
+            print(self.krydser)
         return result
 
     def onlinenext(self):

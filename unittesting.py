@@ -7,7 +7,7 @@ from graphics import *
 
 class DataTests(unittest.TestCase):
     def setUp(self):
-        self.data = data()
+        self.data = data("bolle", 1)
 
     def test_setscore(self):
         pass
@@ -60,19 +60,3 @@ class LogiTests(unittest.TestCase):
         pass
 
 
-class DatabaseTests(unittest.TestCase):
-    def setUp(self):
-        self.sql = mysql_connector()
-
-    # Da vi ikke ved hvordan vi kan teste hver database handling uden brugen af en add og delete, så valgte vi at lave
-    # det hele i en test modul
-    def test_all(self):
-        self.sql.add("testing da test test", "yeet")
-        self.sql.modify("testing da test test", "meat", "bolle", "kryds")
-        row = self.sql.pull("testing da test test")
-        self.assertEqual(row[1], "meat")
-
-        self.sql.delete("testing da test test")
-
-    def tearDown(self):
-        self.sql.close()

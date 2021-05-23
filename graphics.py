@@ -21,8 +21,6 @@ class GameFrame(Frame):
         self.switch = None
         self.onlinemode = onlinemode
 
-
-
         # These buttons show whose turn it is
         self.kLabel = Button(self.root, text="Kryds", bg=self.kColor)
         self.kLabel.grid(row=0, column=self.size + 1, sticky="NSEW")
@@ -37,7 +35,6 @@ class GameFrame(Frame):
             self.loop.start()
 
     def _ButtonPress(self, x, y):
-        print(self.logi.getTurn())
         try:
             if self.logi.getonlineMode()[0] == "kryds" and self.logi.getTurn() == 0:
                 return
@@ -76,11 +73,11 @@ class GameFrame(Frame):
 
             # Mark your own score for moving
             if self.logi.getKryds().count(num) != 0 or self.logi.getBolle().count(num) != 0:
+                self.switch = num
                 # Show valid move spots
                 for b in range(9):
                     but = self.logi.getPos()[b]
                     if but["background"] == self.defaultcolor:
-                        self.switch = num
                         but["background"] = self.switchcolor
                 return True
 
@@ -89,7 +86,6 @@ class GameFrame(Frame):
                 button.configure(bg=self.kColor)
             elif player == "bolle":
                 button.configure(bg=self.bColor)
-            self._turncolor()
 
             # Change score list and remove color from button that isn't scored anymore (The oldest score is replaced if
             # there's more than 3 scores for a player)
@@ -102,7 +98,9 @@ class GameFrame(Frame):
             whoWon = self.logi.CheckWin(player)
             if whoWon is not None:
                 pass
-            self.logi.onlinenext()
+            if self.onlinemode is not None:
+                self.logi.onlinenext()
+            self._turncolor()
 
         # check whose turn it is.
         if self.logi.getTurn() == 1:
@@ -111,7 +109,7 @@ class GameFrame(Frame):
             _bChanges("bolle")
         else:
             print("Something broke N' yeeted")
-        self._turncolor()
+
 
     def _turncolor(self):
         if self.onlinemode is not None:
@@ -133,9 +131,7 @@ class GameFrame(Frame):
         else:
             print("turncolor broke")
         # Switches a number indicating whose turn it is
-        print("switched")
         self.logi.nextTurn()
-
 
     # Buttons gets created with a x and y variable attached to its click function
     def _buttons(self, size):
@@ -183,7 +179,6 @@ class GameFrame(Frame):
             if self.onlinemode == "kryds" and self.logi.getTurn() == 0:
                 print("mysql")
                 if self.logi.getmove() != self.logi.getonlinemove():
-
                     self.logi.getonlineData()
                     self._turncolor()
                     self.resetbuttcolors()
@@ -211,7 +206,6 @@ class StartWindow:
         self.window.protocol("WM_DELETE_WINDOW", self.root.destroy)
         self.window.geometry("200x100")
         self.window.title("Kryds og bolle")
-
 
         self.gameid = StringVar()
         self.gameid.set("GameID")
