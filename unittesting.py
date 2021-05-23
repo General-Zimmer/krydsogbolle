@@ -7,7 +7,7 @@ from graphics import *
 
 class DataTests(unittest.TestCase):
     def setUp(self):
-        self.data = data("bolle", 1)
+        self.data = data(None, None)
 
     def test_setscore(self):
         pass

@@ -8,8 +8,6 @@ class logi:
     def CheckWin(self, player: str):
         score = None
         # Get sorted list of the data to be checked
-        if len(self.data.getKryds()) == 0 or len(self.data.getBolle()) == 0:
-            return None
         if player == "kryds" and self.data.getKryds() is not None:
             score = sorted(self.data.getKryds())
         elif player == "bolle" and self.data.getBolle() is not None:
