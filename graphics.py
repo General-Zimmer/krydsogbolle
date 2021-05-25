@@ -1,6 +1,4 @@
 from tkinter import *
-from tkinter import messagebox
-
 from logic import *
 from functools import partial
 from threading import *
@@ -36,80 +34,78 @@ class GameFrame(Frame):
 
     def _ButtonPress(self, x, y):
         try:
-            if self.logi.getonlineMode()[0] == "kryds" and self.logi.getTurn() == 0:
+            if self.logi.getonlineMode() == "kryds" and self.logi.getTurn() == 0:
                 return
-            if self.logi.getonlineMode()[0] == "bolle" and self.logi.getTurn() == 1:
+            if self.logi.getonlineMode() == "bolle" and self.logi.getTurn() == 1:
                 return
         except TypeError:
-            pass
+            print("DER ER NOGET GALT, AHHHHHHH!")
 
         # Convert x and y cordinates to a number to find the pressed button in a list with all buttons.
         num = x * self.size + y
         button = self.logi.getPos()[num]
 
-        def _bChanges(player: str):
-            # prevents changes to the opponents score
-            if player == "kryds" and self.logi.getBolle().count(num) != 0:
-                return
-            if player == "bolle" and self.logi.getKryds().count(num) != 0:
-                return
-
-            # Move your score if it has been marked
-            if self.switch is not None:
-                # Prevents replacing your already placed scores
-                if player == "kryds" and self.logi.getKryds().count(num) != 0:
-                    return
-                if player == "bolle" and self.logi.getBolle().count(num) != 0:
-                    return
-                # Add score to list and remove color from the removed score
-                self.logi.SetScore(player, num, self.switch)
-                self.logi.getPos()[self.switch]["background"] = self.defaultcolor
-                self.switch = None
-                # hide valid move spots
-                for b in range(9):
-                    but = self.logi.getPos()[b]
-                    if but["background"] == self.switchcolor:
-                        but["background"] = self.defaultcolor
-
-            # Mark your own score for moving
-            if self.logi.getKryds().count(num) != 0 or self.logi.getBolle().count(num) != 0:
-                self.switch = num
-                # Show valid move spots
-                for b in range(9):
-                    but = self.logi.getPos()[b]
-                    if but["background"] == self.defaultcolor:
-                        but["background"] = self.switchcolor
-                return True
-
-            # Change button to corresponding color and flip the turn
-            if player == "kryds":
-                button.configure(bg=self.kColor)
-            elif player == "bolle":
-                button.configure(bg=self.bColor)
-
-            # Change score list and remove color from button that isn't scored anymore (The oldest score is replaced if
-            # there's more than 3 scores for a player)
-            score = self.logi.SetScore(player, num)
-            if score is not None:
-                lastB = self.logi.getPos()[score]
-                lastB.configure(bg=self.defaultcolor)
-
-            # Check if someone won
-            whoWon = self.logi.CheckWin(player)
-            if whoWon is not None:
-                pass
-            if self.onlinemode is not None:
-                self.logi.onlinenext()
-            self._turncolor()
-
         # check whose turn it is.
         if self.logi.getTurn() == 1:
-            _bChanges("kryds")
+            self._bChanges("kryds", button, num)
         elif self.logi.getTurn() == 0:
-            _bChanges("bolle")
+            self._bChanges("bolle", button, num)
         else:
             print("Something broke N' yeeted")
 
+    def _bChanges(self, player: str, button, num):
+        # prevents changes to the opponents score
+        if player == "kryds" and self.logi.getBolle().count(num) != 0:
+            return
+        if player == "bolle" and self.logi.getKryds().count(num) != 0:
+            return
+
+        # Move your score if it has been marked
+        if self.switch is not None:
+            # Prevents replacing your already placed scores
+            if player == "kryds" and self.logi.getKryds().count(num) != 0:
+                return
+            if player == "bolle" and self.logi.getBolle().count(num) != 0:
+                return
+            # Add score to list and remove color from the removed score
+            self.logi.SetScore(player, num, self.switch)
+            self.logi.getPos()[self.switch]["background"] = self.defaultcolor
+            self.switch = None
+            # hide valid move spots
+            for b in range(9):
+                but = self.logi.getPos()[b]
+                if but["background"] == self.switchcolor:
+                    but["background"] = self.defaultcolor
+
+        # Mark your own score for moving
+        if self.logi.getKryds().count(num) != 0 or self.logi.getBolle().count(num) != 0:
+            self.switch = num
+            # Show valid move spots
+            for b in range(9):
+                but = self.logi.getPos()[b]
+                if but["background"] == self.defaultcolor:
+                    but["background"] = self.switchcolor
+            return True
+
+        # Change button to corresponding color and flip the turn
+        if player == "kryds":
+            button.configure(bg=self.kColor)
+        elif player == "bolle":
+            button.configure(bg=self.bColor)
+        self._turncolor()
+        # Change score list and remove color from button that isn't scored anymore (The oldest score is replaced if
+        # there's more than 3 scores for a player)
+        score = self.logi.SetScore(player, num)
+        if score is not None:
+            lastB = self.logi.getPos()[score]
+            lastB.configure(bg=self.defaultcolor)
+
+        # Check if someone won
+        whoWon = self.logi.CheckWin(player)
+        if whoWon is not None:
+            pass
+        if self.onlinemode is not None:
+            self.logi.onlinenext()
 
     def _turncolor(self):
         if self.onlinemode is not None:
@@ -175,24 +171,18 @@ class GameFrame(Frame):
         while True:
             if self.logi.getdeadness():
                 break
-            print(self.logi.getTurn())
             if self.onlinemode == "kryds" and self.logi.getTurn() == 0:
-                print("mysql")
                 if self.logi.getmove() != self.logi.getonlinemove():
                     self.logi.getonlineData()
                     self._turncolor()
                     self.resetbuttcolors()
-                    print("update")
                     sleep(1)
             if self.onlinemode == "bolle" and self.logi.getTurn() == 1:
-                print("mysql")
                 if self.logi.getmove() != self.logi.getonlinemove():
                     self.logi.getonlineData()
                     self._turncolor()
                     self.resetbuttcolors()
-                    print("update")
                     sleep(1)
-
             sleep(1)
 
 

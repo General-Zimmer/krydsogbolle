@@ -6,8 +6,11 @@ class data(mysql_connector):
         mysql_connector.__init__(self)
         self.pos = []
         self.turn = 1
+
+        # De 2 variabler nede under kaldes scores
         self.boller = []
         self.krydser = []
+
         self.onlinemode = onlinemode
         self.move = 0
         self.deadprogram = False
@@ -17,7 +20,6 @@ class data(mysql_connector):
             if mysql_connector.testrow(self, self.gameid) == 1:
                 self.getonlineData()
             else:
-                print("no")
                 mysql_connector.add(self, self.gameid, self.turn, self.move)
 
     def Setscore(self, player: str, num: int, button):

@@ -1,11 +1,12 @@
 from data import *
+from tkinter import messagebox
 
 
 class logi:
     def __init__(self, onlinemode, gameid):
         self.data = data(onlinemode, gameid)
 
-    def CheckWin(self, player: str):
+    def CheckWin(self, player: str, test = None):
         score = None
         # Get sorted list of the data to be checked
         if player == "kryds" and self.data.getKryds() is not None:
@@ -21,23 +22,28 @@ class logi:
         if middle in [1, 4, 7]:
             # Check if the first and last score is in the correct place
             if middle == (score[0] + 1) and middle == (score[2] - 1):
-                print(player + " vandt")
+                self.vundet(player, test)
                 return player
         # Then check the middle score for horrizontel victories
         if middle in [3, 4, 5]:
             # Check if the first and last score is in the correct place
             if middle == (score[0] + 3) and middle == (score[2] - 3):
-                print(player + " vandt")
+                self.vundet(player, test)
                 return player
         # Last check the middle score for diagonal victories
         if middle == 4:
             # Check if the first and last score is in the correct place
             if middle == (score[0] + 4) and middle == (score[2] - 4) or middle == (score[0] + 2) and middle == (
                     score[2] - 2):
-                print(player + " vandt")
+                self.vundet(player, test)
                 return player
 
         return None
+
+    def vundet(self, player: str, test: str = None):
+        if test is None:
+            messagebox.showwarning("Vinder!", player + " har vundet spillet!")
+            print(player + " vandt")
 
     # Do you need comments to getter and setter functions?
     def SetScore(self, player: str, num: int, button=None):
